@@ -37,7 +37,7 @@ function App() {
       const data = await response.json();
 
       if (data.success) {
-        setPrediction(data.species);
+        setPrediction(data);
       } else {
         setError(data.error || 'Prediction failed');
       }
@@ -134,8 +134,27 @@ function App() {
 
         {prediction && (
           <div className="result success">
-            <h2>Prediction Result</h2>
-            <p className="species-name">{prediction}</p>
+            <h2>🎯 Prediction Result</h2>
+            <p className="species-name">{prediction.species}</p>
+            <p className="confidence">Confidence: {(prediction.confidence * 100).toFixed(1)}%</p>
+            
+            <div className="probabilities">
+              <h3>Probability Distribution:</h3>
+              {Object.entries(prediction.probabilities).map(([species, prob]) => (
+                <div key={species} className="probability-item">
+                  <div className="probability-label">
+                    <span className="species-label">{species}</span>
+                    <span className="prob-value">{(prob * 100).toFixed(1)}%</span>
+                  </div>
+                  <div className="probability-bar">
+                    <div 
+                      className="probability-fill" 
+                      style={{width: `${prob * 100}%`}}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
